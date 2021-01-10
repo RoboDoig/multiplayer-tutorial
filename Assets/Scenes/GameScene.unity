@@ -1853,6 +1853,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbbd67d6e9fa227449e0fc085fcd3da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localPlayerPrefab: {fileID: 0}
+  networkPlayerPrefab: {fileID: 0}
 --- !u!1 &1617353395
 GameObject:
   m_ObjectHideFlags: 0

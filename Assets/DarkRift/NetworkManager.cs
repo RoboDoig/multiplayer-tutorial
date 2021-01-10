@@ -12,6 +12,10 @@ public class NetworkManager : MonoBehaviour
 
     public Dictionary<ushort, NetworkEntity> networkPlayers = new Dictionary<ushort, NetworkEntity>();
 
+    // Player prefabs
+    public GameObject localPlayerPrefab;
+    public GameObject networkPlayerPrefab;
+
     void Awake() {
         if (singleton != null) {
             Destroy(gameObject);
@@ -26,5 +30,13 @@ public class NetworkManager : MonoBehaviour
 
     void MessageReceived(object sender, MessageReceivedEventArgs e) {
 
+    }
+
+    void PlayerConnect(object sender, MessageReceivedEventArgs e) {
+
+    }
+
+    void PlayerDisconnect(object sender, MessageReceivedEventArgs e) {
+        
     }
 }
