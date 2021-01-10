@@ -67,7 +67,9 @@ public class NetworkManager : MonoBehaviour
     void PlayerDisconnect(object sender, MessageReceivedEventArgs e) {
         using (Message message = e.GetMessage()) {
             using (DarkRiftReader reader = message.GetReader()) {
-                networkPlayers.Remove(reader.ReadUInt16());
+                ushort ID = reader.ReadUInt16();
+                Destroy(networkPlayers[ID].gameObject);
+                networkPlayers.Remove(ID);
             }
         }
     }
