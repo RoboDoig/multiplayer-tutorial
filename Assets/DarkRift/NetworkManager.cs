@@ -36,6 +36,9 @@ public class NetworkManager : MonoBehaviour
                 PlayerDisconnect(sender, e);
             }
         }
+
+        // Update the UI with connected players
+        UIManager.singleton.PopulateConnectedPlayers(networkPlayers);
     }
 
     void PlayerConnect(object sender, MessageReceivedEventArgs e) {
@@ -70,6 +73,40 @@ public class NetworkManager : MonoBehaviour
                 ushort ID = reader.ReadUInt16();
                 Destroy(networkPlayers[ID].gameObject);
                 networkPlayers.Remove(ID);
+            }
+        }
+    }
+
+    // Network Messages
+    // Message for updating player information
+    private class PlayerInformationMessage : IDarkRiftSerializable {
+        public ushort id {get; set;}
+        public string playerName {get; set;}
+
+        public PlayerInformationMessage() {
+
+        }
+
+        public PlayerInformationMessage(ushort _id, string _playerName) {
+            id = _id;
+            playerName = _playerName;
+        }
+
+        public void Deserialize(DeserializeEvent e) {
+            id  = e.Reader.ReadUInt16();
+            playerName = e.Reader.ReadString();
+        }
+
+        public void Serialize(SerializeEvent e) {
+            e.Writer.Write(playerName);
+        }
+    }
+
+    public void SendPlayerInformationMessage(string playerName) {
+        using (DarkRiftWriter writer = DarkRiftWriter.Create()) {
+            writer.Write(new PlayerInformationMessage(drClient.ID, playerName));
+            using (Message message = Message.Create(Tags.PlayerInformationTag, writer)) {
+                drClient.SendMessage(message, SendMode.Reliable);
             }
         }
     }
