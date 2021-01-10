@@ -22,7 +22,9 @@ namespace MultiplayerPlugin
 
         void ClientConnected(object sender, ClientConnectedEventArgs e)
         {
-
+            // When client connects, generate new player data
+            Player newPlayer = new Player(e.Client.ID, "default");
+            players.Add(e.Client, newPlayer);
         }
 
         void ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
