@@ -2294,5 +2294,5 @@ MonoBehaviour:
   startSessionButton: {fileID: 812650807}
   localTestButton: {fileID: 173328057}
   connectedPlayersGroup: {fileID: 1174346076}
-  connectedPlayerIndicatorPrefab: {fileID: 0}
+  connectedPlayerIndicatorPrefab: {fileID: 1907891671688174401, guid: 01c72d3497494e34f9b147d1711865a8, type: 3}
   readyButton: {fileID: 56382771}
