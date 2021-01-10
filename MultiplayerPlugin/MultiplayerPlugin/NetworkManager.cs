@@ -25,11 +25,48 @@ namespace MultiplayerPlugin
             // When client connects, generate new player data
             Player newPlayer = new Player(e.Client.ID, "default");
             players.Add(e.Client, newPlayer);
+
+            // Write player data and tell other connected clients about this player
+            using (DarkRiftWriter newPlayerWriter = DarkRiftWriter.Create())
+            {
+                newPlayerWriter.Write(newPlayer);
+
+                using (Message newPlayerMessage = Message.Create(Tags.PlayerConnectTag, newPlayerWriter))
+                {
+                    foreach (IClient client in ClientManager.GetAllClients().Where(x => x != e.Client))
+                    {
+                        client.SendMessage(newPlayerMessage, SendMode.Reliable);
+                    }
+                }
+            }
+
+            // Tell the client player about all connected players
+            foreach (Player player in players.Values)
+            {
+                Message playerMessage = Message.Create(Tags.PlayerConnectTag, player);
+                e.Client.SendMessage(playerMessage, SendMode.Reliable);
+            }
+
         }
 
         void ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
         {
+            // Remove player from connected players
+            players.Remove(e.Client);
 
+            // Tell all clients about player disconnection
+            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            {
+                writer.Write(e.Client.ID);
+
+                using (Message message = Message.Create(Tags.PlayerDisconnectTag, writer))
+                {
+                    foreach (IClient client in ClientManager.GetAllClients())
+                    {
+                        client.SendMessage(message, SendMode.Reliable);
+                    }
+                }
+            }
         }
     }
 }
