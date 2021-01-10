@@ -1675,7 +1675,7 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -2252,7 +2252,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2290,3 +2290,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087e4c347393f7f468b4bb97974e1299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nameInputField: {fileID: 691171498}
+  startSessionButton: {fileID: 812650807}
+  localTestButton: {fileID: 173328057}
+  connectedPlayersGroup: {fileID: 1174346076}
+  connectedPlayerIndicatorPrefab: {fileID: 0}
+  readyButton: {fileID: 56382771}
