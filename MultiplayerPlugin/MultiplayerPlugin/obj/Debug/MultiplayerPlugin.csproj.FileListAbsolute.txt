@@ -1,0 +1,13 @@
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\MultiplayerPlugin.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\MultiplayerPlugin.pdb
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.Server.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.pdb
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.xml
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.Server.pdb
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\DarkRift.Server.xml
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.csprojAssemblyReference.cache
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.csproj.CoreCompileInputs.cache
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.csproj.CopyComplete
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.pdb
