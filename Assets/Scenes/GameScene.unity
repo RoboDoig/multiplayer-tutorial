@@ -1769,6 +1769,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1438162993}
   - component: {fileID: 1438162994}
+  - component: {fileID: 1438162996}
+  - component: {fileID: 1438162995}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -1805,7 +1807,7 @@ MonoBehaviour:
   host: 127.0.0.1
   port: 4296
   noDelay: 0
-  autoConnect: 1
+  autoConnect: 0
   invokeFromDispatcher: 1
   sniffData: 0
   objectCacheSettings:
@@ -1827,6 +1829,30 @@ MonoBehaviour:
     extraLargeMemoryBlockSize: 4096
     maxExtraLargeMemoryBlocks: 2
     maxMessageReceivedEventArgs: 4
+--- !u!114 &1438162995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438162992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d4ee5cb6ac61947816114584126fdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1438162996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438162992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbd67d6e9fa227449e0fc085fcd3da6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1617353395
 GameObject:
   m_ObjectHideFlags: 0

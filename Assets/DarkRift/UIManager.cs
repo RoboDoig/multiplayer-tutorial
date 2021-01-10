@@ -25,7 +25,8 @@ public class UIManager : MonoBehaviour
     }
 
     void Start() {
-
+        localTestButton.onClick.AddListener(NetworkInterface.singleton.StartLocalSession);
+        SetLobbyInteractable(false);
     }
 
     public void PopulateConnectedPlayers(Dictionary<ushort, NetworkEntity> connectedPlayers) {
