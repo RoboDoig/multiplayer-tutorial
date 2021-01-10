@@ -47,6 +47,9 @@ namespace MultiplayerPlugin
                 e.Client.SendMessage(playerMessage, SendMode.Reliable);
             }
 
+
+            // Set client message callbacks
+            e.Client.MessageReceived += OnPlayerInformationMessage;
         }
 
         void ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
@@ -64,6 +67,37 @@ namespace MultiplayerPlugin
                     foreach (IClient client in ClientManager.GetAllClients())
                     {
                         client.SendMessage(message, SendMode.Reliable);
+                    }
+                }
+            }
+        }
+
+        void OnPlayerInformationMessage(object sender, MessageReceivedEventArgs e)
+        {
+            using (Message message = e.GetMessage() as Message)
+            {
+                if (message.Tag == Tags.PlayerInformationTag)
+                {
+                    using (DarkRiftReader reader = message.GetReader())
+                    {
+                        string playerName = reader.ReadString();
+
+                        // Update player information
+                        players[e.Client].playerName = playerName;
+
+                        // Update all players
+                        using (DarkRiftWriter writer = DarkRiftWriter.Create())
+                        {
+                            writer.Write(e.Client.ID);
+                            writer.Write(playerName);
+
+                            message.Serialize(writer);
+                        }
+
+                        foreach (IClient client in ClientManager.GetAllClients())
+                        {
+                            client.SendMessage(message, e.SendMode);
+                        }
                     }
                 }
             }
