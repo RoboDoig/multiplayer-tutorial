@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DarkRift;
 using DarkRift.Server;
 
+using Microsoft.Playfab.Gaming.GSDK.CSharp;
+
 namespace MultiplayerPlugin
 {
     class NetworkManager : Plugin
@@ -18,6 +20,17 @@ namespace MultiplayerPlugin
         {
             ClientManager.ClientConnected += ClientConnected;
             ClientManager.ClientDisconnected += ClientDisconnected;
+
+            // Connect to PlayFab agent
+            GameserverSDK.Start();
+            if (GameserverSDK.ReadyForPlayers())
+            {
+                // returns true on allocation call, player about to connect
+            }
+            else
+            {
+                // returns false when server is being terminated
+            }
         }
 
         void ClientConnected(object sender, ClientConnectedEventArgs e)
