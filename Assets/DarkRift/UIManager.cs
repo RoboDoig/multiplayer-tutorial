@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
 
     void Start() {
         localTestButton.onClick.AddListener(NetworkInterface.singleton.StartLocalSession);
+        readyButton.onClick.AddListener(NetworkInterface.singleton.SetPlayerReady);
         SetLobbyInteractable(false);
     }
 

@@ -44,4 +44,12 @@ public class NetworkInterface : MonoBehaviour
             UIManager.singleton.SetInputInteractable(true);
         }
     }
+
+    public void SetPlayerReady() {
+        // Tell the server this player is ready to start game
+        NetworkManager.singleton.SendPlayerReadyMessage(true);
+
+        // Update UI
+        UIManager.singleton.SetLobbyInteractable(false);
+    }
 }
