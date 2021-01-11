@@ -38,6 +38,8 @@ public class NetworkManager : MonoBehaviour
                 PlayerInformation(sender, e);
             } else if (message.Tag == Tags.StartGameTag) {
                 StartGame(sender, e);
+            } else if (message.Tag == Tags.PlayerMoveTag) {
+                PlayerMove(sender, e);
             }
         }
 
@@ -52,15 +54,23 @@ public class NetworkManager : MonoBehaviour
                 ushort ID = reader.ReadUInt16();
                 string playerName = reader.ReadString();
 
+                Vector3 position = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                Color32 color = new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), 255);
+
                 // Player / Network Player Spawn
                 GameObject obj;
                 if (ID == drClient.ID) {
                     // If this ID corresponds to this client, spawn the controllable player prefab
-                    obj = Instantiate(localPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
+                    obj = Instantiate(localPlayerPrefab, position, Quaternion.identity) as GameObject;
                 } else {
                     // Else we spawn a network prefab, non-controllable
-                    obj = Instantiate(networkPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
+                    obj = Instantiate(networkPlayerPrefab, position, Quaternion.identity) as GameObject;
                 }
+
+                // Set the color
+                Renderer renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.color = color;
 
                 // Get network entity data of prefab and add to network players store
                 networkPlayers.Add(ID, obj.GetComponent<NetworkEntity>());
@@ -99,6 +109,16 @@ public class NetworkManager : MonoBehaviour
             Player player = networkPlayer.Value.GetComponent<Player>();
             if (player != null) {
                 player.controllable = true;
+            }
+        }
+    }
+
+    void PlayerMove(object sender, MessageReceivedEventArgs e) {
+        using (Message message = e.GetMessage()) {
+            using (DarkRiftReader reader = message.GetReader()) {
+                PlayerMoveMessage playerMoveMessage = reader.ReadSerializable<PlayerMoveMessage>();
+
+                networkPlayers[playerMoveMessage.ID].transform.position = playerMoveMessage.position;
             }
         }
     }
@@ -164,6 +184,40 @@ public class NetworkManager : MonoBehaviour
             writer.Write(new PlayerReadyMessage(isReady));
             using (Message message = Message.Create(Tags.PlayerSetReadyTag, writer)) {
                 drClient.SendMessage(message, SendMode.Reliable);
+            }
+        }
+    }
+
+    // Message for updating movement
+    private class PlayerMoveMessage : IDarkRiftSerializable {
+        public ushort ID {get; set;}
+        public Vector3 position {get; set;}
+
+        public PlayerMoveMessage() {
+
+        }
+
+        public PlayerMoveMessage(Vector3 _postion) {
+            position = _postion;
+        }
+
+        public void Deserialize(DeserializeEvent e) {
+            ID = e.Reader.ReadUInt16();
+            position = new Vector3(e.Reader.ReadSingle(), e.Reader.ReadSingle(), e.Reader.ReadSingle());
+        }
+
+        public void Serialize(SerializeEvent e) {
+            e.Writer.Write(position.x);
+            e.Writer.Write(position.y);
+            e.Writer.Write(position.z);
+        }
+    }
+
+    public void SendPlayerMoveMessage(Vector3 position) {
+        using (DarkRiftWriter writer = DarkRiftWriter.Create()) {
+            writer.Write(new PlayerMoveMessage(position));
+            using (Message message = Message.Create(Tags.PlayerMoveTag, writer)) {
+                drClient.SendMessage(message, SendMode.Unreliable);
             }
         }
     }
