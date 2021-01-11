@@ -56,10 +56,10 @@ public class NetworkManager : MonoBehaviour
                 GameObject obj;
                 if (ID == drClient.ID) {
                     // If this ID corresponds to this client, spawn the controllable player prefab
-                    obj = Instantiate(localPlayerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+                    obj = Instantiate(localPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
                 } else {
                     // Else we spawn a network prefab, non-controllable
-                    obj = Instantiate(networkPlayerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+                    obj = Instantiate(networkPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
                 }
 
                 // Get network entity data of prefab and add to network players store
