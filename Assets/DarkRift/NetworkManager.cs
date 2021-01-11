@@ -34,6 +34,8 @@ public class NetworkManager : MonoBehaviour
                 PlayerConnect(sender, e);
             } else if (message.Tag == Tags.PlayerDisconnectTag) {
                 PlayerDisconnect(sender, e);
+            } else if (message.Tag == Tags.PlayerInformationTag) {
+                PlayerInformation(sender, e);
             }
         }
 
@@ -73,6 +75,16 @@ public class NetworkManager : MonoBehaviour
                 ushort ID = reader.ReadUInt16();
                 Destroy(networkPlayers[ID].gameObject);
                 networkPlayers.Remove(ID);
+            }
+        }
+    }
+
+    void PlayerInformation(object sender, MessageReceivedEventArgs e) {
+        using (Message message = e.GetMessage()) {
+            using (DarkRiftReader reader = message.GetReader()) {
+                PlayerInformationMessage playerInformationMessage = reader.ReadSerializable<PlayerInformationMessage>();
+
+                networkPlayers[playerInformationMessage.id].SetPlayerName(playerInformationMessage.playerName);
             }
         }
     }
