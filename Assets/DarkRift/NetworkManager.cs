@@ -36,6 +36,8 @@ public class NetworkManager : MonoBehaviour
                 PlayerDisconnect(sender, e);
             } else if (message.Tag == Tags.PlayerInformationTag) {
                 PlayerInformation(sender, e);
+            } else if (message.Tag == Tags.StartGameTag) {
+                StartGame(sender, e);
             }
         }
 
@@ -85,6 +87,18 @@ public class NetworkManager : MonoBehaviour
                 PlayerInformationMessage playerInformationMessage = reader.ReadSerializable<PlayerInformationMessage>();
 
                 networkPlayers[playerInformationMessage.id].SetPlayerName(playerInformationMessage.playerName);
+            }
+        }
+    }
+
+    void StartGame(object sender, MessageReceivedEventArgs e) {
+        UIManager.singleton.CloseUI();
+
+        // Set the local player to be controllable
+        foreach (KeyValuePair<ushort, NetworkEntity> networkPlayer in networkPlayers) {
+            Player player = networkPlayer.Value.GetComponent<Player>();
+            if (player != null) {
+                player.controllable = true;
             }
         }
     }
