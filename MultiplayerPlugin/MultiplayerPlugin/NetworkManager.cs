@@ -51,6 +51,7 @@ namespace MultiplayerPlugin
             // Set client message callbacks
             e.Client.MessageReceived += OnPlayerInformationMessage;
             e.Client.MessageReceived += OnPlayerReadyMessage;
+            e.Client.MessageReceived += OnPlayerMoveMessage;
         }
 
         void ClientDisconnected(object sender, ClientDisconnectedEventArgs e)

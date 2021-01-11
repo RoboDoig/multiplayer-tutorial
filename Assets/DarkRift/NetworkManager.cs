@@ -54,15 +54,23 @@ public class NetworkManager : MonoBehaviour
                 ushort ID = reader.ReadUInt16();
                 string playerName = reader.ReadString();
 
+                Vector3 position = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                Color32 color = new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), 255);
+
                 // Player / Network Player Spawn
                 GameObject obj;
                 if (ID == drClient.ID) {
                     // If this ID corresponds to this client, spawn the controllable player prefab
-                    obj = Instantiate(localPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
+                    obj = Instantiate(localPlayerPrefab, position, Quaternion.identity) as GameObject;
                 } else {
                     // Else we spawn a network prefab, non-controllable
-                    obj = Instantiate(networkPlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity) as GameObject;
+                    obj = Instantiate(networkPlayerPrefab, position, Quaternion.identity) as GameObject;
                 }
+
+                // Set the color
+                Renderer renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.color = color;
 
                 // Get network entity data of prefab and add to network players store
                 networkPlayers.Add(ID, obj.GetComponent<NetworkEntity>());
