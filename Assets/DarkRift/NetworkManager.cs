@@ -99,8 +99,7 @@ public class NetworkManager : MonoBehaviour
 
         }
 
-        public PlayerInformationMessage(ushort _id, string _playerName) {
-            id = _id;
+        public PlayerInformationMessage(string _playerName) {
             playerName = _playerName;
         }
 
@@ -116,8 +115,40 @@ public class NetworkManager : MonoBehaviour
 
     public void SendPlayerInformationMessage(string playerName) {
         using (DarkRiftWriter writer = DarkRiftWriter.Create()) {
-            writer.Write(new PlayerInformationMessage(drClient.ID, playerName));
+            writer.Write(new PlayerInformationMessage(playerName));
             using (Message message = Message.Create(Tags.PlayerInformationTag, writer)) {
+                drClient.SendMessage(message, SendMode.Reliable);
+            }
+        }
+    }
+
+    // Message for telling the server a player is ready
+    private class PlayerReadyMessage : IDarkRiftSerializable {
+        public ushort id {get; set;}
+        public bool isReady {get; set;}
+
+        public PlayerReadyMessage() {
+
+        }
+
+        public PlayerReadyMessage(bool _isReady) {
+            isReady = _isReady;
+        }
+
+        public void Deserialize(DeserializeEvent e) {
+            id = e.Reader.ReadUInt16();
+            isReady = e.Reader.ReadBoolean();
+        }
+
+        public void Serialize(SerializeEvent e) {
+            e.Writer.Write(isReady);
+        }
+    }
+
+    public void SendPlayerReadyMessage(bool isReady) {
+        using (DarkRiftWriter writer = DarkRiftWriter.Create()) {
+            writer.Write(new PlayerReadyMessage(isReady));
+            using (Message message = Message.Create(Tags.PlayerSetReadyTag, writer)) {
                 drClient.SendMessage(message, SendMode.Reliable);
             }
         }
