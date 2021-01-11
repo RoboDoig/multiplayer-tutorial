@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
             motion = new Vector3(hMove, 0f, vMove).normalized * Time.deltaTime * moveSpeed;
 
             transform.position += motion;
+
+            NetworkManager.singleton.SendPlayerMoveMessage(transform.position);
         }
     }
 }

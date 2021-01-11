@@ -38,6 +38,8 @@ public class NetworkManager : MonoBehaviour
                 PlayerInformation(sender, e);
             } else if (message.Tag == Tags.StartGameTag) {
                 StartGame(sender, e);
+            } else if (message.Tag == Tags.PlayerMoveTag) {
+                PlayerMove(sender, e);
             }
         }
 
@@ -103,6 +105,16 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    void PlayerMove(object sender, MessageReceivedEventArgs e) {
+        using (Message message = e.GetMessage()) {
+            using (DarkRiftReader reader = message.GetReader()) {
+                PlayerMoveMessage playerMoveMessage = reader.ReadSerializable<PlayerMoveMessage>();
+
+                networkPlayers[playerMoveMessage.ID].transform.position = playerMoveMessage.position;
+            }
+        }
+    }
+
     // Network Messages
     // Message for updating player information
     private class PlayerInformationMessage : IDarkRiftSerializable {
@@ -164,6 +176,40 @@ public class NetworkManager : MonoBehaviour
             writer.Write(new PlayerReadyMessage(isReady));
             using (Message message = Message.Create(Tags.PlayerSetReadyTag, writer)) {
                 drClient.SendMessage(message, SendMode.Reliable);
+            }
+        }
+    }
+
+    // Message for updating movement
+    private class PlayerMoveMessage : IDarkRiftSerializable {
+        public ushort ID {get; set;}
+        public Vector3 position {get; set;}
+
+        public PlayerMoveMessage() {
+
+        }
+
+        public PlayerMoveMessage(Vector3 _postion) {
+            position = _postion;
+        }
+
+        public void Deserialize(DeserializeEvent e) {
+            ID = e.Reader.ReadUInt16();
+            position = new Vector3(e.Reader.ReadSingle(), e.Reader.ReadSingle(), e.Reader.ReadSingle());
+        }
+
+        public void Serialize(SerializeEvent e) {
+            e.Writer.Write(position.x);
+            e.Writer.Write(position.y);
+            e.Writer.Write(position.z);
+        }
+    }
+
+    public void SendPlayerMoveMessage(Vector3 position) {
+        using (DarkRiftWriter writer = DarkRiftWriter.Create()) {
+            writer.Write(new PlayerMoveMessage(position));
+            using (Message message = Message.Create(Tags.PlayerMoveTag, writer)) {
+                drClient.SendMessage(message, SendMode.Unreliable);
             }
         }
     }
