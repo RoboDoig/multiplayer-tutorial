@@ -11,3 +11,7 @@ C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\Mult
 C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.csproj.CopyComplete
 C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.dll
 C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\obj\Debug\MultiplayerPlugin.pdb
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\Microsoft.Playfab.Gaming.GSDK.CSharp.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\Newtonsoft.Json.dll
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\Microsoft.Playfab.Gaming.GSDK.CSharp.pdb
+C:\Users\erski\Documents\AndrewRepos\multiplayer-tutorial\MultiplayerPlugin\MultiplayerPlugin\bin\Debug\Newtonsoft.Json.xml
