@@ -34,6 +34,9 @@ public class NetworkInterface : MonoBehaviour
 
     public void OnLocalSessionCallback() {
         if (drClient.ConnectionState == ConnectionState.Connected) {
+            // If connection successful, send any additional player info
+            NetworkManager.singleton.SendPlayerInformationMessage(UIManager.singleton.nameInputField.text);
+
             // Set lobby controls to interactable
             UIManager.singleton.SetLobbyInteractable(true);
         } else {
