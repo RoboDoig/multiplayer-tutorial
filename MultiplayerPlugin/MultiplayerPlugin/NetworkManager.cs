@@ -21,6 +21,9 @@ namespace MultiplayerPlugin
             ClientManager.ClientConnected += ClientConnected;
             ClientManager.ClientDisconnected += ClientDisconnected;
 
+            GameserverSDK.RegisterShutdownCallback(OnShutdown);
+            GameserverSDK.RegisterHealthCallback(OnHealthCheck);
+
             // Connect to PlayFab agent
             GameserverSDK.Start();
             if (GameserverSDK.ReadyForPlayers())
@@ -31,6 +34,16 @@ namespace MultiplayerPlugin
             {
                 // returns false when server is being terminated
             }
+        }
+
+        void OnShutdown()
+        {
+
+        }
+
+        bool OnHealthCheck()
+        {
+            return true;
         }
 
         void ClientConnected(object sender, ClientConnectedEventArgs e)
