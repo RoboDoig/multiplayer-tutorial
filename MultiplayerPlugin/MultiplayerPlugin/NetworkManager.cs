@@ -38,7 +38,7 @@ namespace MultiplayerPlugin
 
         void OnShutdown()
         {
-
+            Environment.Exit(1);
         }
 
         bool OnHealthCheck()
