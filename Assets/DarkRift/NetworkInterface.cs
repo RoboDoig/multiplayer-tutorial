@@ -72,6 +72,12 @@ public class NetworkInterface : MonoBehaviour
         PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnPlayFabError);
 
         // Disable input panel
-        uiManager.SetInputInteractable(false);
+        UIManager.singleton.SetInputInteractable(false);
+    }
+
+    // PlayFab error handling //
+    private void OnPlayFabError(PlayFabError error) {
+        // Debug log an error report
+        Debug.Log(error.GenerateErrorReport());
     }
 }
