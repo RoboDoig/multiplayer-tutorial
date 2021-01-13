@@ -1841,6 +1841,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d4ee5cb6ac61947816114584126fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  region: EastUs
+  matchmakingQueue: DefaultQueue
+  matchmakingTimeout: 100
+  playfabTCPPortName: gg_tcp
+  playfabUDPPortName: gg_udp
 --- !u!114 &1438162996
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -193,6 +193,7 @@ public class NetworkInterface : MonoBehaviour
     // PlayFab error handling //
     private void OnPlayFabError(PlayFabError error) {
         // Debug log an error report
+        Debug.Log("Error!");
         Debug.Log(error.GenerateErrorReport());
     }
 }
