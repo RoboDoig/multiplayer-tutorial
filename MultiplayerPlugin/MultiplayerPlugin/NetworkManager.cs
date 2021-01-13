@@ -15,6 +15,8 @@ namespace MultiplayerPlugin
         public override bool ThreadSafe => false;
         public override Version Version => new Version(1, 0, 0);
         Dictionary<IClient, Player> players = new Dictionary<IClient, Player>();
+        DateTime startDateTime;
+        bool sessionIdAssigned;
 
         public NetworkManager(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
@@ -23,6 +25,7 @@ namespace MultiplayerPlugin
 
             GameserverSDK.RegisterShutdownCallback(OnShutdown);
             GameserverSDK.RegisterHealthCallback(OnHealthCheck);
+            sessionIdAssigned = false;
 
             // Connect to PlayFab agent
             GameserverSDK.Start();
@@ -43,6 +46,38 @@ namespace MultiplayerPlugin
 
         bool OnHealthCheck()
         {
+            // How long has server been active in seconds?
+            float awakeTime;
+
+            if (!sessionIdAssigned)
+            {
+                awakeTime = 0f;
+            }
+            else
+            {
+                awakeTime = (float)(DateTime.Now - startDateTime).TotalSeconds;
+            }
+
+            // Get server info
+            // If session ID has been assigned, server is active
+            IDictionary<string, string> config = GameserverSDK.getConfigSettings();
+            if (config.TryGetValue(GameserverSDK.SessionIdKey, out string sessionId))
+            {
+                // If this is the first session assignment, start the activated timer
+                if (!sessionIdAssigned)
+                {
+                    startDateTime = DateTime.Now;
+                    sessionIdAssigned = true;
+                }
+            }
+
+            // If server has been awake for over 10 mins, and no players connected, and the PlayFab server is not in standby (no session id assigned): begin shutdown
+            if (awakeTime > 600f && players.Count <= 0 && sessionIdAssigned)
+            {
+                OnShutdown();
+                return false;
+            }
+
             return true;
         }
 
@@ -73,6 +108,7 @@ namespace MultiplayerPlugin
                 e.Client.SendMessage(playerMessage, SendMode.Reliable);
             }
 
+            UpdatePlayFabPlayers();
 
             // Set client message callbacks
             e.Client.MessageReceived += OnPlayerInformationMessage;
@@ -98,6 +134,8 @@ namespace MultiplayerPlugin
                     }
                 }
             }
+
+            UpdatePlayFabPlayers();
         }
 
         void OnPlayerInformationMessage(object sender, MessageReceivedEventArgs e)
@@ -208,6 +246,17 @@ namespace MultiplayerPlugin
                     }
                 }
             }
+        }
+
+        void UpdatePlayFabPlayers()
+        {
+            List<ConnectedPlayer> listPfPlayers = new List<ConnectedPlayer>();
+            foreach (KeyValuePair<IClient, Player> player in players)
+            {
+                listPfPlayers.Add(new ConnectedPlayer(player.Value.playerName));
+            }
+
+            GameserverSDK.UpdateConnectedPlayers(listPfPlayers);
         }
     }
 }
