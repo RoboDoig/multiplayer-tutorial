@@ -16,7 +16,6 @@ public class NetworkInterface : MonoBehaviour
     private UnityClient drClient;
 
     // PlayFab settings
-    public string titleID; // The playfab title ID
     public string region; // The region where we will try to connect
     public string matchmakingQueue; // The name of the matchmaking queue we'll use
     public int matchmakingTimeout; // How long to attempt matchmaking before resetting

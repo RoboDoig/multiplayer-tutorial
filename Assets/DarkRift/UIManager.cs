@@ -25,6 +25,9 @@ public class UIManager : MonoBehaviour
     }
 
     void Start() {
+        startSessionButton.onClick.AddListener(
+            () => {NetworkInterface.singleton.StartSession(nameInputField.text);}
+        );
         localTestButton.onClick.AddListener(NetworkInterface.singleton.StartLocalSession);
         readyButton.onClick.AddListener(NetworkInterface.singleton.SetPlayerReady);
         SetLobbyInteractable(false);
