@@ -1,3 +1,4 @@
+using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,6 +74,121 @@ public class NetworkInterface : MonoBehaviour
 
         // Disable input panel
         UIManager.singleton.SetInputInteractable(false);
+    }
+
+    private void OnLoginSuccess(LoginResult result) {
+        // If login is a success, attempt to start matchmaking with the client's entity key values
+        StartMatchmakingRequest(result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+    }
+
+    private void StartMatchmakingRequest(string entityID, string entityType) {
+        // Create a matchmaking request
+        PlayFabMultiplayerAPI.CreateMatchmakingTicket(
+            new CreateMatchmakingTicketRequest {
+                Creator = new MatchmakingPlayer {
+                    Entity = new PlayFab.MultiplayerModels.EntityKey {
+                        Id = entityID,
+                        Type = entityType
+                    },
+                    Attributes = new MatchmakingPlayerAttributes {
+                        DataObject = new {
+                            Latencies = new object[] {
+                                new {
+                                    region = region,
+                                    latency = 100
+                                }
+                            },
+                        },
+                    },
+                },
+
+                // Cancel matchmaking after this time in seconds with no match found
+                GiveUpAfterSeconds = matchmakingTimeout,
+
+                // name of the queue to poll
+                QueueName = matchmakingQueue,
+            },
+
+            this.OnMatchmakingTicketCreated,
+            this.OnPlayFabError
+        );
+    }
+
+     private void OnMatchmakingTicketCreated(CreateMatchmakingTicketResult createMatchmakingTicketResult) {
+        // Now we need to start polling the ticket periodically, using a coroutine
+        StartCoroutine(PollMatchmakingTicket(createMatchmakingTicketResult.TicketId));
+
+        // Display progress in UI
+        UIManager.singleton.DisplayNetworkMessage("Matchmaking request sent");
+    }
+
+    private IEnumerator PollMatchmakingTicket(string ticketId) {
+        // Delay ticket request
+        yield return new WaitForSeconds(10);
+
+        // Poll the ticket
+        PlayFabMultiplayerAPI.GetMatchmakingTicket(
+            new GetMatchmakingTicketRequest {
+                TicketId = ticketId,
+                QueueName = matchmakingQueue
+            },
+
+            // callbacks
+            this.OnGetMatchmakingTicket,
+            this.OnPlayFabError
+        );
+    }
+
+    private void OnGetMatchmakingTicket(GetMatchmakingTicketResult getMatchmakingTicketResult) {
+        // When PlayFab returns our matchmaking ticket
+
+        if (getMatchmakingTicketResult.Status == "Matched") {
+            // If we found a match, we then need to access its server
+            MatchFound(getMatchmakingTicketResult);
+        } else if (getMatchmakingTicketResult.Status == "Canceled") {
+            // If the matchmaking ticket was canceled we need to reset the input UI
+            UIManager.singleton.SetInputInteractable(true);
+            UIManager.singleton.DisplayNetworkMessage("Start Session");
+        } else {
+            // If we don't have a conclusive matchmaking status, we keep polling the ticket
+            StartCoroutine(PollMatchmakingTicket(getMatchmakingTicketResult.TicketId));
+        }
+
+        // Display matchmaking status in the UI
+        UIManager.singleton.DisplayNetworkMessage(getMatchmakingTicketResult.Status);
+    }
+
+    private void MatchFound(GetMatchmakingTicketResult getMatchmakingTicketResult) {
+        // When we find a match, we need to request the connection variables to join clients
+        PlayFabMultiplayerAPI.GetMatch(
+            new GetMatchRequest {
+                MatchId = getMatchmakingTicketResult.MatchId,
+                QueueName = matchmakingQueue
+            },
+
+            this.OnGetMatch,
+            this.OnPlayFabError
+        );
+    }
+
+    private void OnGetMatch(GetMatchResult getMatchResult) {
+        // Get the server to join
+        string ipString = getMatchResult.ServerDetails.IPV4Address;
+        int tcpPort = 0;
+        int udpPort = 0;
+
+        // Get the ports and names to join
+        foreach (Port port in getMatchResult.ServerDetails.Ports) {
+            if (port.Name == playfabTCPPortName)
+                tcpPort = port.Num;
+
+            if (port.Name == playfabUDPPortName)
+                udpPort = port.Num;
+        }
+
+        // Connect and initialize the DarkRiftClient, hand over control to the NetworkManager
+        if (tcpPort != 0 && udpPort != 0)
+            drClient.ConnectInBackground(IPAddress.Parse(ipString), tcpPort, udpPort, true, null);
     }
 
     // PlayFab error handling //
