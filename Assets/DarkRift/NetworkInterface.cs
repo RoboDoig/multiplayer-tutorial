@@ -187,7 +187,22 @@ public class NetworkInterface : MonoBehaviour
 
         // Connect and initialize the DarkRiftClient, hand over control to the NetworkManager
         if (tcpPort != 0 && udpPort != 0)
-            drClient.ConnectInBackground(IPAddress.Parse(ipString), tcpPort, udpPort, true, null);
+            drClient.ConnectInBackground(IPAddress.Parse(ipString), tcpPort, udpPort, true, delegate {OnPlayFabSessionCallback();});
+    }
+
+    private void OnPlayFabSessionCallback() {
+        if (drClient.ConnectionState == ConnectionState.Connected) {
+            // If connection successful, send any additional player info
+            NetworkManager.singleton.SendPlayerInformationMessage(UIManager.singleton.nameInputField.text);
+
+            // Set lobby controls to interactable
+            UIManager.singleton.SetInputInteractable(false);
+            UIManager.singleton.SetLobbyInteractable(true);
+        } else {
+            // Else reset the input UI
+            UIManager.singleton.SetInputInteractable(true);
+            UIManager.singleton.SetLobbyInteractable(false);
+        }
     }
 
     // PlayFab error handling //
